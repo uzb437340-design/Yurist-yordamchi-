@@ -1,11 +1,20 @@
 import asyncio
 import logging
+import sys
+import os
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+
 from aiogram import Bot, Dispatcher
 from aiogram.fsm.storage.memory import MemoryStorage
 
 from config import BOT_TOKEN
-from handlers import start, documents, ai_advisor, admin, payment
-from utils.database import init_db
+import start
+import documents
+import ai_advisor
+import admin
+import payment
+from database import init_db
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -16,14 +25,12 @@ async def main():
     storage = MemoryStorage()
     dp = Dispatcher(storage=storage)
 
-    # Register routers
     dp.include_router(start.router)
     dp.include_router(documents.router)
     dp.include_router(ai_advisor.router)
     dp.include_router(payment.router)
     dp.include_router(admin.router)
 
-    # Init database
     await init_db()
 
     logger.info("Bot ishga tushdi!")
